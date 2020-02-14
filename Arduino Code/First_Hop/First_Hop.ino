@@ -17,10 +17,14 @@ const byte dAddress[6] = "00005"; // Destination address (remote address).
 
 
 //device listening channel.
-int deviceChannel = 90 + offset;
+int deviceChannel = 90 + offset*3;
 
 //device sending channel.
-int destinationChannel = 91 + offset;
+int destinationChannel = 93 + offset*3;
+
+int i = 0;
+unsigned long StartTime;
+unsigned long CurrentTime = 0;
 
 void setup() {
   while (!Serial);
@@ -37,6 +41,7 @@ void setup() {
   
   //Set module as receiver
   radio.startListening();
+  StartTime = millis();
 }
 
 void loop() {
@@ -47,7 +52,14 @@ void loop() {
     radio.read(&text, sizeof(text));
 
     //for debugging purposes.
-    Serial.println("Message received: " + String(text));
+    // Serial.println("Message received: " + String(text));
+
+    i++;
+    if (i%499 == 0) {
+      CurrentTime = millis();
+      Serial.println("Time Ellapsed: " + String((CurrentTime - StartTime)/1000.0) + " Seconds");
+      StartTime = millis();
+    }
 
     //Set module as transmitter
     radio.stopListening();

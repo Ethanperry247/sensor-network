@@ -20,7 +20,7 @@ void setup()
   radio.begin();
 
   //Setting high channel for reduced interference
-  radio.setChannel(94);
+  radio.setChannel(102);
   
   //set the address
   radio.openReadingPipe(0, address);
@@ -39,7 +39,7 @@ void loop()
     radio.read(&text, sizeof(text));
     
     //for debugging purposes.
-    // Serial.println("Message received: " + String(text));
+    //Serial.println("Message received: " + String(text));
     
     i++;
     if (i%499 == 0) {
