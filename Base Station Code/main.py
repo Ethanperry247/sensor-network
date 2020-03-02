@@ -3,7 +3,7 @@ from typing import List
 from logger import Logger
 
 
-class network:
+class Network:
 
     def __init__(self, port='COM1', baud='115200'):
         super().__init__()
@@ -51,13 +51,17 @@ class network:
         self.stop_thread = True
 
 # Device class to be implemented...
-class device:
+class Device:
 
     def __init__(self, ID, pathway):
         super().__init__()
         device_ID: int = ID
         device_pathway: List[int] = pathway
+        online_status: bool = True
+        alarm_status: bool = False
 
+    def get_ID(self):
+        pass
 
 # Error class to be implemented...
 class Error(Exception):
