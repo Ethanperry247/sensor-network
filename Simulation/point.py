@@ -2,10 +2,11 @@ import math
 
 class Point:
 
-    def __init__(self, x, y, node_type='S'):
+    def __init__(self, x, y, ID, node_type='S'):
         super().__init__()
         self.x = x
         self.y = y
+        self.ID = ID
         self.node_type = node_type
 
     def find_distance_from(self, point) -> float:
@@ -28,6 +29,20 @@ class Edge:
     def return_distance(self):
         return self.distance
 
+    def get_first_point(self):
+        return self.first_point
+
+    def get_second_point(self):
+        return self.second_point
+
+    def get_corresponding_point(self, point: Point):
+        if (point == self.first_point):
+            return self.second_point
+        elif (point == self.second_point):
+            return self.first_point
+        else:
+            return None
+
     def find_half_way_point(self):
         # Find the X half way in between the two points.
         if (self.first_point.x <= self.second_point.x):
@@ -41,4 +56,4 @@ class Edge:
         else:
             y = self.first_point.y - (self.first_point.y - self.second_point.y)//2
 
-        return Point(x, y, 'R')
+        return Point(x, y, int(x*y))
