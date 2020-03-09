@@ -1,8 +1,8 @@
 import random # To generate random points.
 from point import * # Custom point and edge classes.
 from logger import Logger # Import logging capabilities.
-import networkx as nx
-import matplotlib.pyplot as plt
+import networkx as nx # Graph generating utility.
+import matplotlib.pyplot as plt # Graphing utility.
 
 # Create a new logger.
 logger = Logger("example.csv")
@@ -61,12 +61,16 @@ steiner_tree = []
 
 # To be used by the recursive family finding function get_family().
 
+# Grabs the passed in point and all points connected to that point.
 def get_family(point: Point):
     family = set()
     recur(point, family)
     family.add(point)
     return family
 
+# The recursive implementation for the get_family method.
+# Grabs the corresponding point to the passed in point, adds it to a list,
+# then recurs on that point.
 def recur(point: Point, family):
     if (point in family):
         return
@@ -77,6 +81,8 @@ def recur(point: Point, family):
             recur(edge.get_corresponding_point(point), family)
 
 
+# Checks if the second point is within the family or group of the first point.
+# If it is, it returns true.
 def check_for_loop(first, second):
     first_family = get_family(first)
     if (second in first_family):
@@ -88,36 +94,32 @@ def check_for_loop(first, second):
 # Fill the edge set.
 # Loop until point set is empty.
 while (bool(point_set)):
-    comparison_point = point_set.pop()
+    comparison_point = point_set.pop() # Grab a point in the list.
+
     # Print out all available points if desired.
     # print(f'Point: {str(comparison_point)}')
-    logger.writeToCSV(comparison_point.x, comparison_point.y)
 
+    logger.writeToCSV(comparison_point.x, comparison_point.y) # Write the point to a csv file for graphing purposes.
+
+    # Generate every possible edge between all points. 
+    # Will theoretically generate n^2 edges where n is number of points.
     for point in point_set:
-        # if (point.find_distance_from(comparison_point) < 2*R):
         edge_set.append(Edge(comparison_point, point))
-            # Edge_G.add_edge(comparison_point.ID, point.ID)
-
-# Draw the graph of nodes with edges.
-# pos = nx.get_node_attributes(Edge_G,'pos')
-# Control the size of the nodes using node_size.
-# nx.draw(Edge_G, pos, node_size=10, with_labels=True)
-# plt.show()
 
 # Sort the list of all edges from least to greatest.
 edge_set.sort(key=Edge.return_distance)
 
-# Print out all available edges if desired.
+##### Print out all available edges if desired. #####
 # print("\n\n\nAll possible edges: ")
 # print(f"Size: {len(edge_set)}")
 # Print out all edges.
 # for edge in edge_set:
 #     print(f'{str(edge)}')
 
+# To be filled with the edges of the minimum spanning tree.
 tree_edges: Edge = set()
 
-long_edge_list = []
-
+# block of code generates the minimum spanning tree.
 print("Generating minimum spanning tree...")
 for edge in edge_set:
     # First check if our point set is full. If it is, we are done constructing the minimum spanning tree.
@@ -125,27 +127,15 @@ for edge in edge_set:
         print("Found Minimum Spanning Tree")
         break
 
-    if(check_for_loop(edge.get_first_point(), edge.get_second_point())):
-        # print("Avoided loop.")
-        pass
-    else:
+    if(not check_for_loop(edge.get_first_point(), edge.get_second_point())):
         tree_edges.add(edge)
         Minimum_Edge_G.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
-        # # Draw the graph of nodes with edges.
-        # pos = nx.get_node_attributes(Minimum_Edge_G,'pos')
-        # # Control the size of the nodes using node_size.
-        # nx.draw(Minimum_Edge_G, pos, node_size=10, with_labels=True)
-        # plt.show()
-        # point_set.add(edge.get_first_point())
-        # point_set.add(edge.get_second_point())
 
-##### Print out all available tree edges if desired #####
+# Creates a list of the MST edges, then adds all of those elements to the graph to be drawn.
 tree_edge_list = list(tree_edges)
+# Sorts the MST edges.
 tree_edge_list.sort(key=Edge.return_distance)
-# print("\n\n\nMinimum Spanning Tree Edges: ")
-# print(f"Size: {len(tree_edge_list)}")
 for edge in tree_edge_list:
-    # print(f'{str(edge)}')
     Minimum_Edge_G.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
 
 # Draw the graph of nodes with edges.
@@ -154,24 +144,29 @@ pos = nx.get_node_attributes(Minimum_Edge_G,'pos')
 nx.draw(Minimum_Edge_G, pos, node_size=10)
 plt.show()
 
-new_point_list = []
+# To be filled with all required relay nodes.
+relay_point_list = []
 
 # Create a new graph (will be drawn).
 final_graph = nx.Graph()
 
+# Generates relay nodes where they are applicable.
 for edge in tree_edge_list:
     if (edge.return_distance() > R):
-        new_point = edge.find_half_way_point()
-        print(str(new_point))
-        final_graph.add_node(new_point.ID,pos=(new_point.x,new_point.y))
-        new_point_list.append(new_point.ID)
+        relay_point = edge.find_half_way_point()
+        print(str(relay_point))
+        final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
+        relay_point_list.append(relay_point.ID)
 
-original_point_list = []
+# Will be populated by sensor nodes.
+sensor_point_list = []
 
+# Adds all sensor nodes to the final graph printout.
 for point in final_list:
     final_graph.add_node(point.ID,pos=(point.x,point.y))
-    original_point_list.append(point.ID)
+    sensor_point_list.append(point.ID)
 
+# Adds all edges to the final graph printout.
 for edge in tree_edge_list:
     final_graph.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
     pass
@@ -179,11 +174,12 @@ for edge in tree_edge_list:
 # Draw the additional relay nodes in red.
 pos = nx.get_node_attributes(final_graph,'pos')
 
-# Draw the nodes to the screen.
+# Draw the sensor nodes to the screen.
 nx.draw(final_graph, pos, node_size=10)
 
+# Draw the relay nodes to the screen.
 nx.draw(final_graph, pos,
-                       nodelist=new_point_list,
+                       nodelist=relay_point_list,
                        node_color='r',
                        node_size=10,
                        alpha=0.8)
