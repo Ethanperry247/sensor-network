@@ -11,7 +11,7 @@ logger = Logger("example.csv")
 G = nx.Graph()
 
 # Number of nodes and the limits of their location.
-NUM_NODES = 100
+NUM_NODES = 50
 GRAPH_SIZE = 400
 
 
@@ -119,17 +119,19 @@ edge_set.sort(key=Edge.return_distance)
 # To be filled with the edges of the minimum spanning tree.
 tree_edges: Edge = set()
 
-# block of code generates the minimum spanning tree.
-print("Generating minimum spanning tree...")
-for edge in edge_set:
-    # First check if our point set is full. If it is, we are done constructing the minimum spanning tree.
-    if (point_set == reserve_point_set):
-        print("Found Minimum Spanning Tree")
-        break
+def generate_minimum_spanning_tree():
+    print("Generating minimum spanning tree...")
+    for edge in edge_set:
+        # First check if our point set is full. If it is, we are done constructing the minimum spanning tree.
+        if (point_set == reserve_point_set):
+            break
 
-    if(not check_for_loop(edge.get_first_point(), edge.get_second_point())):
-        tree_edges.add(edge)
-        Minimum_Edge_G.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
+        if(not check_for_loop(edge.get_first_point(), edge.get_second_point())):
+            tree_edges.add(edge)
+            Minimum_Edge_G.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
+    print("Found Minimum Spanning Tree")
+
+generate_minimum_spanning_tree()
 
 # Creates a list of the MST edges, then adds all of those elements to the graph to be drawn.
 tree_edge_list = list(tree_edges)
@@ -137,6 +139,7 @@ tree_edge_list = list(tree_edges)
 tree_edge_list.sort(key=Edge.return_distance)
 for edge in tree_edge_list:
     Minimum_Edge_G.add_edge(edge.get_first_point().ID, edge.get_second_point().ID)
+
 
 # Draw the graph of nodes with edges.
 pos = nx.get_node_attributes(Minimum_Edge_G,'pos')
@@ -150,24 +153,39 @@ relay_point_list = []
 # Create a new graph (will be drawn).
 final_graph = nx.Graph()
 
-"""
-# Generates relay nodes where they are applicable.
-for edge in tree_edge_list:
-    if (edge.return_distance() > R):
-        relay_point = edge.find_half_way_point()
-        print(str(relay_point))
-        final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
-        relay_point_list.append(relay_point.ID)
-"""
+# This method takes in an edge, searches the list of edges, and returns the corresponding edge to one vertex.
+def get_corresponding_edge(edge):
+    for second_edge in tree_edge_list:
+        if (edge != second_edge):
+            if (edge.second_point == second_edge.first_point):
+                return second_edge
+    return None
+    
+# This method finds every two connected edges and finds a relay node which connects them if applicable.
+def generate_three_stars():
+    for first_edge in tree_edge_list:
+        # tree_edge_list.remove(edge)
+        second_edge = get_corresponding_edge(first_edge)
+        if (second_edge is not None):
+            if (first_edge.return_distance() > R and second_edge.return_distance() > R):
+                relay_point = first_edge.find_three_star_relay(second_edge.second_point)
+                final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
+                relay_point_list.append(relay_point.ID)
+
+# Generates relay nodes for three stars where they are applicable.
+generate_three_stars()
+
+def generate_relay_nodes():
+    for edge in tree_edge_list:
+        if (edge.return_distance() > R):
+            relay_points = edge.split_points(R)
+            print(str(relay_points))
+            for relay_point in relay_points:
+                final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
+                relay_point_list.append(relay_point.ID)
 
 # Generates relay nodes where they are applicable.
-for edge in tree_edge_list:
-    if (edge.return_distance() > R):
-        relay_points = edge.split_points(R)
-        print(str(relay_points))
-        for relay_point in relay_points:
-            final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
-            relay_point_list.append(relay_point.ID)
+generate_relay_nodes()
 
 # Will be populated by sensor nodes.
 sensor_point_list = []

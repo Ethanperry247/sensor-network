@@ -43,6 +43,14 @@ class Edge:
         else:
             return None
 
+    def find_three_star_relay(self, third_point: Point):
+
+        mid_point = self.find_half_way_point()
+        mid_edge = Edge(mid_point, third_point)
+        center_point = mid_edge.find_half_way_point()
+
+        return center_point
+
     def find_half_way_point(self):
         # Find the X half way in between the two points.
         if (self.first_point.x <= self.second_point.x):
