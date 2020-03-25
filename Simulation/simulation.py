@@ -53,10 +53,3 @@ while(bool(relay_node_set)):
     print(str(relay_node))
 
 print(len(relay_node_set))
-
-
-
-
-
-
-

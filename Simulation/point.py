@@ -57,3 +57,51 @@ class Edge:
             y = self.first_point.y - (self.first_point.y - self.second_point.y)//2
 
         return Point(x, y, int(x*y))
+
+    def split_points(self, radius) -> set():
+
+        # First get the number of radii away the two points are.
+        num_ranges: int = int(self.distance//(radius*2) + 1)
+
+        # Create an empty set of points--to be the return for the method.
+        relay_nodes = set()
+
+        # Create an empty array for the x components and y components to be used when creating new points.
+        x_components = []
+        y_components = []
+
+        # Find the X and Y distance between the two points.
+        # Then, divide by the number of relay node ranges to find the x and y length between each relay node.
+        x_distance = abs(self.first_point.x - self.second_point.x)/(num_ranges+1)
+        y_distance = abs(self.first_point.y - self.second_point.y)/(num_ranges+1)
+
+        
+
+        # Find the X and Y components of the relays splitting the two nodes.
+        # There are four cases, each depending on whether the X and Y locations of the first node are greater or less than that of the second node.
+        if (self.first_point.x <= self.second_point.x):
+            if (self.first_point.y <= self.second_point.y):
+                for i in range(1, num_ranges + 1):
+                    y_components.append(self.first_point.y+y_distance*i)
+                    x_components.append(self.first_point.x+x_distance*i)
+            else:
+                for i in range(1, num_ranges + 1):
+                    x_components.append(self.first_point.x+x_distance*i)
+                    y_components.append(self.second_point.y+y_distance*i)
+                y_components.reverse() # The purpose of the reversing is to properly align the X and Y component arrays so that nodes are placed correctly.
+        else:
+            if (self.first_point.y <= self.second_point.y):
+                for i in range(1, num_ranges + 1):
+                    x_components.append(self.second_point.x+x_distance*i)
+                    y_components.append(self.first_point.y+y_distance*i)
+                y_components.reverse()
+            else:
+                for i in range(1, num_ranges + 1):
+                    x_components.append(self.second_point.x+x_distance*i)
+                    y_components.append(self.second_point.y+y_distance*i)
+
+        # Create all of the relay nodes based on the calculated X and Y components.
+        for i in range(0, num_ranges):
+            relay_nodes.add(Point(x_components[i], y_components[i], int(x_components[i] * y_components[i]), node_type='R'))
+
+        return relay_nodes

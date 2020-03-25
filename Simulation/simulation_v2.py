@@ -150,6 +150,7 @@ relay_point_list = []
 # Create a new graph (will be drawn).
 final_graph = nx.Graph()
 
+"""
 # Generates relay nodes where they are applicable.
 for edge in tree_edge_list:
     if (edge.return_distance() > R):
@@ -157,6 +158,16 @@ for edge in tree_edge_list:
         print(str(relay_point))
         final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
         relay_point_list.append(relay_point.ID)
+"""
+
+# Generates relay nodes where they are applicable.
+for edge in tree_edge_list:
+    if (edge.return_distance() > R):
+        relay_points = edge.split_points(R)
+        print(str(relay_points))
+        for relay_point in relay_points:
+            final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
+            relay_point_list.append(relay_point.ID)
 
 # Will be populated by sensor nodes.
 sensor_point_list = []
@@ -184,5 +195,3 @@ nx.draw(final_graph, pos,
                        node_size=10,
                        alpha=0.8)
 plt.show()
-
-
