@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+:root {
+    --color-primary: black;
+    --color-secondary: rgb(104, 182, 255);
+    --color-tertiary: rgb(37, 37, 37);
+    --color-red: rgb(255, 104, 104);
+    --color-green: rgb(104, 255, 104);
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+html, body {
+    margin: 0;
+}
+
+h1, h2 {
+    color: var(--color-primary);
+}
+
+h3, h4 {
+    color: var(--color-secondary);
+}
+
+input[type=text], input[type=password], select {
+    width: 25%;
+    min-width: 200px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid var(--color-primary);
+    background-color: whitesmoke;
+    border-radius: 5px;
+}
+
+input[type=submit], button {
+    background-color: var(--color-secondary);
+    color: white;
+    min-width: 50px;
+    padding: 10px, 20px, 10px, 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+input[type=submit]:hover, button:hover {
+    transition: 0.3s;
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+}
+
+p {
+    width: 30%;
+    min-width: 200px;
+    text-align: justify;
+}
+
+.topnav {
+    margin-left: 160px; /* Same as the width of the sidenav */
+    
+}
+
+.topnav ul {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-tertiary);
+    overflow: hidden;
+    list-style-type: none;
+}
+
+.topnav li {
+    float: left;
+}
+
+.topnav li a {
+    display: block;
+    font-size: 1.2em;
+    padding: 14px 16px; 
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+  
+.topnav li a:hover { 
+    transition: 0.3s;
+    background-color: var(--color-primary);
+}
+
+.sidenav ul {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    margin-top: 0;
+    background-color: var(--color-tertiary);
+    overflow-x: hidden;
+    padding: 0;
+}
+  
+.sidenav li a {
+    font-size: 1.2em;
+    display: block;
+    color: white;
+    text-align: left;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+  
+.sidenav li a:hover { 
+    transition: 0.3s;
+    background-color: var(--color-primary);
+    color: white;
+}
+
+strong {
+    color: var(--color-secondary);
+    font-weight: 100;
+}
+
+.main {
+    margin-left: 160px; /* Same as the width of the sidenav */
+    padding: 0px 10px;
+}
+
+.right {
+    float: right;
+}
+
+.circle {
+    list-style: circle;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    margin-left: 5%;
+    margin-right: 5%;
+    position: relative;
+}
+
+.light-box {
+    border-color: black;
+    border: solid;
+    border-radius: 5px;
+    text-align: center;
+    margin: 5px;
+    line-height: 50px;
+    width: calc(25% - 10px);
+    min-width: 250px;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.box {
+    background-color: var(--color-secondary);
+    text-align: center;
+    margin: 5px;
+    line-height: 50px;
+    width: calc(25% - 10px);
+    min-width: 250px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.node-box {
+    text-align: center;
+    margin: 5px;
+    line-height: 50px;
+    width: calc(25% - 10px);
+    min-width: 250px;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    border: solid;
+    border-color: black;
+}
+
+.red {
+    background-color: var(--color-red);
+}
+
+.green {
+    background-color: var(--color-green);
+}
+
+.blue {
+    background-color: var(--color-secondary);
+    color: black;
+}
+
+.box:hover {
+    background-color: var(--color-primary);
+    color: white;
+}

@@ -12,32 +12,63 @@ const byte destinationAddress[][6] = {"00001", "00002", "00003", "00004", "00005
 
 
 int offset = 3; // Offset the radio channel for stringing multiple hops together.
-const byte sAddress[6] = "00004"; // Source address (local address).
-const byte dAddress[6] = "00005"; // Destination address (remote address).
+const byte sAddress[6] = "50"; // Source address (local address).
+const byte dAddress[6] = "00000"; // Destination address (remote address).
 
+
+// Random ID generation.
+long publicID;
+long privateID;
+
+// An LED for transmission/function and one for errors.
+//int functionPin = 10;
+//int errorPin = 8;
+#define functionPin 5
+#define errorPin 7
 
 //device listening channel.
-int deviceChannel = 90 + offset*3;
+int deviceChannel = 50;
 
 //device sending channel.
-int destinationChannel = 93 + offset*3;
+int destinationChannel = 50;
 
 int i = 0;
 unsigned long StartTime;
 unsigned long CurrentTime = 0;
 
 void setup() {
+
+  pinMode(functionPin, OUTPUT);
+  pinMode(errorPin, OUTPUT);
+
+  // if analog input pin 0 is unconnected, random analog
+  // noise will cause the call to randomSeed() to generate
+  // different seed numbers each time the sketch runs.
+  // randomSeed() will then shuffle the random function.
+  randomSeed(analogRead(0));
+
+  // Generate a random ID between 1 and 9999.
+  // ID 0 is reserved for the base station.
+  publicID = random(1, 10000);
+  privateID = random(1, 100);
+  
   while (!Serial);
     Serial.begin(9600);
+
+  // Displays public and private IDs:
+  Serial.println("Public ID: " + String(publicID));
+  Serial.println("Private ID: " + String(privateID));
   
   radio.begin();
 
   //setting high channel for reduced interference
   radio.setChannel(deviceChannel);
+
+  byte destinationAddress[6];
+  String(50).getBytes(destinationAddress, 6);
   
   //sets all pipes to listen to.
-  // for (int i = 0; i < 6; i++)
-  radio.openReadingPipe(0, sAddress);
+  radio.openReadingPipe(0, destinationAddress);
   
   //Set module as receiver
   radio.startListening();
@@ -45,6 +76,7 @@ void setup() {
 }
 
 void loop() {
+  
   //Read the data if available in buffer
   if (radio.available())
   {
@@ -52,7 +84,7 @@ void loop() {
     radio.read(&text, sizeof(text));
 
     //for debugging purposes.
-    // Serial.println("Message received: " + String(text));
+    Serial.println("Message received: " + String(text));
 
     i++;
     if (i%499 == 0) {

@@ -3,65 +3,50 @@
         <title>{{ title }}</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='styles/global.css') }}">
 
-        <style>
-            
-        body {
-            margin: 0;
-            margin-top: 0;
-            color: black;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 0;
-        }
-
-        .flex {
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: row;
-            height: auto;
-            align-items: center;
-            justify-content: center;
-            margin-top: 0;
-            margin-left: 5%;
-            margin-right: 5%;
-            position: relative;
-        }
-
-        .box {
-            background-color: skyblue;
-            text-align: center;
-            margin: 5px;
-            line-height: 50px;
-            width: calc(25% - 10px);
-            text-decoration: none;
-            color: black;
-            border-radius: 5px;
-        }
-
-        </style>
    </head>
    <body>
-        <h1>IOT Network Interface</h1>
-        <!-- <h2>The date and time on the server is: {{ time }}</h2> -->
-        <h2>Node Status</h2>
-        <h3 class="flex">
-            <div class="box">IDLE</div>
-        </h3>
+       <div class="sidenav">
+            <ul>
+                <li class="blue"><a>Welcome User: {{ user }}</a></li>
+                <!-- Left to Right Nav -->
+                <li><a href="">Dashboard</a></li>
 
-        <h2>Manual Control</h2>
-        <h3 class="flex">
-            <a href="/ON" class="button box">SEND MESSAGE</a>
-            <a href="/OFF"class="button box">NODE SHUT OFF</a>
-            <a href="/OFF"class="button box">NETWORK RESTART</a>
-            <a href="/EXIT"class="button box">EXIT SERVER</a>
-        </h3>
+                <!-- Right to Left Nav -->
+                <li><a href="">Log Out</a></li>
+            </ul>
+        </div>  
+        <div class="main">
+            <h1>IOT Network Interface</h1>
+            <hr>
+            <!-- <h2>The date and time on the server is: {{ time }}</h2> -->
+            <h2>Network Status</h2>
+            <h3 class="flex">
+                <div class="node-box {{status[0]}}">{{status[1]}}</div>
+            </h3>
+            <hr>
+
+            <h2>Manual Control</h2>
+            <h3 class="flex">
+                <a href="/MAIN/ON" class="button box">SEND MESSAGE</a>
+                <a href="/MAIN/OFF"class="button box">NODE SHUT OFF</a>
+                <a href="/MAIN/OFF"class="button box">NETWORK RESTART</a>
+                <a href="/MAIN/EXIT"class="button box">EXIT SERVER</a>
+            </h3>
+            <hr>
+
+            <h2>Available Nodes</h2>
+            <h3 class="flex">
+                {% for node in nodes %}
+                    <div class="node-box {{nodes.get(node)[1]}}">
+                        <i>Node ID: {{ node }}</i><br>
+                        Node Type: {{ nodes.get(node)[0] }}
+                        Node Status: {{ nodes.get(node)[2] }}
+                    </div>
+                {% endfor %}
+            </h3>
+        </div>
+
    </body>
 </html>

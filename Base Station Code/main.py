@@ -1,11 +1,21 @@
-import serial
+from serial import Serial
 from typing import List
 from logger import Logger
 
+class Device:
+
+    def __init__(self, ID):
+        super().__init__()
+        device_ID: int = ID
+        online_status: bool = True
+        alarm_status: bool = False
+
+    def get_ID(self):
+        pass
 
 class Network:
 
-    def __init__(self, port='COM1', baud='115200'):
+    def __init__(self, port='COM4', baud='115200'):
         super().__init__()
         arduino: Serial = serial.Serial(port, baud)
 
@@ -50,19 +60,21 @@ class Network:
     def stop_listening(self):
         self.stop_thread = True
 
-# Device class to be implemented...
-class Device:
-
-    def __init__(self, ID, pathway):
-        super().__init__()
-        device_ID: int = ID
-        device_pathway: List[int] = pathway
-        online_status: bool = True
-        alarm_status: bool = False
-
-    def get_ID(self):
-        pass
 
 # Error class to be implemented...
 class Error(Exception):
     pass
+
+
+arduino: Serial = Serial('COM8', '115200')
+# arduino.flushInput()
+# arduino.write(b'STOP')
+while True:
+    data = str(arduino.readline())
+    print(data)
+
+# while True:
+#     data = arduino.read()
+#     if (data):
+#         print(data)
+

@@ -11,12 +11,13 @@ logger = Logger("example.csv")
 G = nx.Graph()
 
 # Number of nodes and the limits of their location.
-NUM_NODES = 50
+NUM_NODES = 15
 GRAPH_SIZE = 400
+NODE_SIZE = 100
 
 
 # Set the max radius for the simulation.
-D: float = 60
+D: float = 120
 R: float = D/2
 
 # Create a set of vertices to be put into our steiner tree.
@@ -31,13 +32,15 @@ for i in range(0, NUM_NODES):
     y = random.randint(0, GRAPH_SIZE)
     # Add a point at a random location, and assign it an ID.
     point_set.add(Point(x, y, i))
-    # Add nodes to the graph G.
+    # Add nodes to the graph G. 
     G.add_node(i,pos=(x,y))
+
 
 # Draw the graph of nodes with edges.
 pos = nx.get_node_attributes(G,'pos')
 # Draw G without any edges.
-nx.draw(G, pos, node_size=10, with_labels=True)
+# nx.draw(G, pos, node_size=10, with_labels=True)
+nx.draw(G, pos, node_size=NODE_SIZE)
 plt.show()
 
 # Create a duplicate of graph G to edges to.
@@ -144,7 +147,7 @@ for edge in tree_edge_list:
 # Draw the graph of nodes with edges.
 pos = nx.get_node_attributes(Minimum_Edge_G,'pos')
 # Control the size of the nodes using node_size.
-nx.draw(Minimum_Edge_G, pos, node_size=10)
+nx.draw(Minimum_Edge_G, pos, node_size=NODE_SIZE)
 plt.show()
 
 # To be filled with all required relay nodes.
@@ -154,26 +157,35 @@ relay_point_list = []
 final_graph = nx.Graph()
 
 # This method takes in an edge, searches the list of edges, and returns the corresponding edge to one vertex.
-def get_corresponding_edge(edge):
+def get_corresponding_edges(edge):
+    corresponding_edge_list = []
     for second_edge in tree_edge_list:
         if (edge != second_edge):
             if (edge.second_point == second_edge.first_point):
-                return second_edge
-    return None
+                corresponding_edge_list.append(second_edge)
+            if (edge.first_point == second_edge.second_point):
+                corresponding_edge_list.append(second_edge)
+            if (edge.first_point == second_edge.first_point):
+                corresponding_edge_list.append(second_edge)
+            if (edge.second_point == second_edge.second_point):
+                corresponding_edge_list.append(second_edge)
+    return corresponding_edge_list
     
 # This method finds every two connected edges and finds a relay node which connects them if applicable.
 def generate_three_stars():
     for first_edge in tree_edge_list:
         # tree_edge_list.remove(edge)
-        second_edge = get_corresponding_edge(first_edge)
-        if (second_edge is not None):
-            if (first_edge.return_distance() > R and second_edge.return_distance() > R):
-                relay_point = first_edge.find_three_star_relay(second_edge.second_point)
-                final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
-                relay_point_list.append(relay_point.ID)
+        edge_list = get_corresponding_edges(first_edge)
+        if (edge_list is not None):
+            # First check if both edges are out of proper range.
+            for second_edge in edge_list:
+                if (first_edge.return_distance() > R and second_edge.return_distance() > R):
+                    relay_point = first_edge.find_three_star_relay(second_edge.second_point)
+                    final_graph.add_node(relay_point.ID,pos=(relay_point.x,relay_point.y))
+                    relay_point_list.append(relay_point.ID)
 
 # Generates relay nodes for three stars where they are applicable.
-generate_three_stars()
+# generate_three_stars()
 
 def generate_relay_nodes():
     for edge in tree_edge_list:
@@ -204,12 +216,12 @@ for edge in tree_edge_list:
 pos = nx.get_node_attributes(final_graph,'pos')
 
 # Draw the sensor nodes to the screen.
-nx.draw(final_graph, pos, node_size=10)
+nx.draw(final_graph, pos, node_size=NODE_SIZE)
 
 # Draw the relay nodes to the screen.
 nx.draw(final_graph, pos,
                        nodelist=relay_point_list,
                        node_color='r',
-                       node_size=10,
+                       node_size=NODE_SIZE,
                        alpha=0.8)
 plt.show()

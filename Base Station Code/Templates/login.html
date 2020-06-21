@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+   <head>
+        <title>Network Management</title>
+
+        <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='styles/global.css') }}">
+   </head>
+   <body>
+          <h1>IOT Network Interface</h1>
+          <h4>Please enter a valid username and password.</h4>
+          <form action="{{ url_for('login_status') }}" method="post">
+               <label>Username: </label><br>
+               <input type="text" name="username"><br><br>
+               <label>Password: </label><br>
+               <input type="password" name="password"><br><br>
+               <input type="submit" value="Submit">
+          </form>
+   </body>
+</html>
