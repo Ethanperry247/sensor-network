@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+
+    <style>
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .network-graph {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .network-graph .point {
+            position: absolute;
+            z-index: 999;
+            height: 20px;
+            width: 20px;
+            background-color: black;
+            border-radius: 50%;
+            box-shadow: 0 0 3px grey;
+            --position-x: 0;
+            --position-y: 0;
+            left: var(--position-x);
+            top: var(--position-y);
+        }
+
+        .network-graph .edge {
+            position: absolute;
+            z-index: 0;
+            height: 2px;
+            /* border: 1.5px lightgrey solid; */
+            background-color: lightgrey;
+            --start-x: 0;
+            --start-y: 0;
+            --length: 0;
+            --rotation: 0;
+            width: var(--length);
+            top: var(--start-y);
+            left: var(--start-x);
+            transform: rotate(var(--rotation));
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="graph" class="network-graph">
+
+    </div>
+
+    <script>
+        let graphData;
+        let disabled = false; // Variable used for throttling the resize event handler.
+        const data = [[0, 1], [2, 1], [15, 1], [4, 17], [5, 3], [8, 9], [10, 10], [19, 10], [19, 13], [13, 16]];
+        fetch("http://localhost:8000/solve", {
+            body: JSON.stringify(data),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            graphData = data.graph;
+            createGraph(data.graph);
+        }).catch(error => {
+            console.log(error);
+        });
+
+        window.addEventListener('resize', () => {
+            if (disabled) {
+                return;
+            }
+            disabled = true;
+            createGraph(graphData);
+            setTimeout(() => disabled = false, 10);
+        });
+
+        const createGraph = (graphData) => {
+            const nodeSize = 20;
+            const graph = document.getElementById("graph");
+            const height = graph.getBoundingClientRect().height;
+            const width = graph.getBoundingClientRect().width;
+
+            while (graph.firstChild) {
+                graph.removeChild(graph.lastChild);
+            }
+
+            if (graphData.points && graphData.edges) {
+                const maxPositionX = graphData.points.reduce((max, current) => current.position[0] > max ? current.position[0] : max, 0);
+                const maxPositionY = graphData.points.reduce((max, current) => current.position[1] > max ? current.position[1] : max, 0);
+                const offsetX = (position) => (position / maxPositionX) * (width - nodeSize);
+                const offsetY = (position) => (position / maxPositionY) * (height - nodeSize);
+                graphData.points.forEach(point => {
+                    const newPoint = document.createElement("div");
+                    newPoint.classList.add("point");
+                    newPoint.style.setProperty("--position-x", offsetX(point.position[0]) + "px");
+                    newPoint.style.setProperty("--position-y", offsetY(point.position[1]) + "px");
+                    graph.appendChild(newPoint);
+                });
+                graphData.edges.forEach(edge => {
+                    graph.appendChild(createEdge(
+                        offsetX(edge.edge[0].position[0]) + nodeSize / 2,
+                        offsetY(edge.edge[0].position[1]) + nodeSize / 2,
+                        offsetX(edge.edge[1].position[0]) + nodeSize / 2,
+                        offsetY(edge.edge[1].position[1]) + nodeSize / 2
+                    ));
+                });
+            }
+        };
+
+
+        const createEdge = (x1, y1, x2, y2) => {
+            const newEdge = document.createElement("div");
+            newEdge.classList.add("edge");
+
+            const a = x1 - x2,
+                b = y1 - y2,
+                length = Math.sqrt(a * a + b * b);
+
+            const midpointX = (x1 + x2) / 2,
+                midpointY = (y1 + y2) / 2;
+
+            const x = midpointX - length / 2,
+                y = midpointY;
+
+            const angle = Math.PI - Math.atan2(-b, a);
+
+            newEdge.style.setProperty("--start-x", x + "px");
+            newEdge.style.setProperty("--start-y", y + "px");
+            newEdge.style.setProperty("--length", length + "px");
+            newEdge.style.setProperty("--rotation", angle + "rad");
+            return newEdge;
+        };
+    </script>
+</body>

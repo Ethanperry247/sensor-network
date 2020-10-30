@@ -1,0 +1,69 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Edude\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "C:\\Users\\Edude\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.7.3\\**",
+                "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}",
+                "Master/",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src",
+                "C:/Program Files (x86)/Arduino/libraries/RF24-1.3.6",
+                "C:/Program Files (x86)/Arduino/libraries/RF24-1.3.6/utility",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\RF24Network-master",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\RF24Mesh-master",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/HID/src",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src",
+                "C:/Program Files (x86)/Arduino/hardware",
+                "C:/Program Files (x86)/Arduino/libraries",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\avr\\include",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                    "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                    "${workspaceFolder}/**",
+                    "${workspaceFolder}",
+                    "Master/",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src",
+                    "C:/Program Files (x86)/Arduino/libraries/RF24-1.3.6",
+                    "C:/Program Files (x86)/Arduino/libraries/RF24-1.3.6/utility",
+                    "C:\\Program Files (x86)\\Arduino\\libraries\\RF24Network-master",
+                    "C:\\Program Files (x86)\\Arduino\\libraries\\RF24Mesh-master",
+                    "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/HID/src",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src",
+                    "C:/Program Files (x86)/Arduino/hardware",
+                    "C:/Program Files (x86)/Arduino/libraries",
+                    "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\avr\\include",
+                    "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include"
+                ]
+            },
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USBCON"
+            ],
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.21.27702/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "forcedInclude": [
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
+                "Master/Messenger.h"
+            ]
+        }
+    ],
+    "version": 4
+}
